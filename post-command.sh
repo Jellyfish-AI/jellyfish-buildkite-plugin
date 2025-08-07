@@ -17,8 +17,8 @@ echo "--- :rocket: Sending deployment webhook to Jellyfish..."
 # typically lowercased and with hyphens replaced by underscores.
 # For 'jellyfish-buildkite-plugin', the slug is 'jellyfish_buildkite_plugin'.
 
-WEBHOOK_URL="${BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_WEBHOOK_URL}"
-API_TOKEN="${BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_API_TOKEN}"
+WEBHOOK_URL="${BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_WEBHOOK_URL:-}"
+API_TOKEN="${BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_API_TOKEN:-}"
 
 # Validate required configuration
 if [ -z "$WEBHOOK_URL" ]; then
@@ -45,7 +45,7 @@ COMMIT_SHAS="[\"$BUILDKITE_COMMIT\"]" # Using the head commit of the build
 # Process labels: Buildkite passes array options as a space-separated string.
 # We use 'jq' to convert this into a proper JSON array.
 LABELS_JSON_ARRAY="[]"
-if [ -n "$BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_LABELS" ]; then
+if [ -n "${BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_LABELS:-}" ]; then
   LABELS_JSON_ARRAY=$(echo "$BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_LABELS" | jq -R -s 'split(" ") | map(select(length > 0))')
 fi
 

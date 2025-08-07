@@ -137,6 +137,29 @@ steps:
           labels: ["environment:production"]
 ```
 
+## Testing
+
+### Quick Test
+
+Run the test runner to verify the plugin works:
+
+```bash
+./test.sh
+```
+
+### Test Options
+
+```bash
+./test.sh --quick      # Quick local test only
+./test.sh --full       # Comprehensive test suite
+./test.sh --payload    # JSON payload validation
+./test.sh --all        # All tests (default)
+```
+
+This will simulate a Buildkite environment and test all functionality.
+
+For detailed testing instructions, see [tests/README.md](tests/README.md).
+
 ## Troubleshooting
 
 ### Common Issues
