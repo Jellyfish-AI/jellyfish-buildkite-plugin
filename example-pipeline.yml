@@ -1,0 +1,55 @@
+# Example Buildkite Pipeline Configuration
+# This demonstrates how to use the Jellyfish Buildkite Plugin
+
+env:
+  # Store your Jellyfish API token as a secure environment variable
+  JELLYFISH_API_TOKEN: "your-secure-api-token-here"
+
+steps:
+  - label: ":hammer: Build"
+    command: |
+      echo "Building application..."
+      # Your build commands here
+      ./build.sh
+
+  - label: ":test_tube: Test"
+    command: |
+      echo "Running tests..."
+      # Your test commands here
+      ./test.sh
+
+  - wait
+
+  - label: ":rocket: Deploy to Staging"
+    command: |
+      echo "Deploying to staging..."
+      # Your deployment commands here
+      ./deploy.sh staging
+    plugins:
+      - jellyfish-ai/jellyfish-buildkite-plugin#v1.0.0:
+          webhook-url: "https://webhooks.jellyfish.co/deployment"
+          api-token: "${JELLYFISH_API_TOKEN}"
+          name: "staging-deployment"
+          labels:
+            - "environment:staging"
+            - "service:my-app"
+
+  - block: ":shipit: Release to Production"
+    prompt: "Deploy to production?"
+
+  - label: ":rocket: Deploy to Production"
+    command: |
+      echo "Deploying to production..."
+      # Your production deployment commands here
+      ./deploy.sh production
+    plugins:
+      - jellyfish-ai/jellyfish-buildkite-plugin#v1.0.0:
+          webhook-url: "https://webhooks.jellyfish.co/deployment"
+          api-token: "${JELLYFISH_API_TOKEN}"
+          name: "production-deployment"
+          reference-id: "prod-deploy-${BUILDKITE_BUILD_NUMBER}"
+          labels:
+            - "environment:production"
+            - "service:my-app"
+            - "version:${BUILDKITE_TAG:-latest}"
+            - "critical:true"
