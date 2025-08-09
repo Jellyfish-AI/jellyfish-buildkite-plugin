@@ -23,7 +23,7 @@ jobs:
         namespace: "jellyfish" # Replace with your Endor Labs tenant namespace
         scan_dependencies: true
         scan_secrets: false
-        pr: false
+        pr: true
         pr_baseline: "develop"
         github_token: ${{ secrets.GITHUB_TOKEN }} # Required for PR comments on new policy violations
         additional_args: "--exit-on-policy-warning"
