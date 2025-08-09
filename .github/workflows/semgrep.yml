@@ -2,7 +2,7 @@ name: Static analysis using semgrep
 permissions: read-all
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: [ "develop" ]
 jobs:
     semgrep:
         # User definable name of this GitHub Actions job.
