@@ -19,5 +19,5 @@ jobs:
     
         steps:
         # Fetch project source with GitHub Actions Checkout.
-        - uses: actions/checkout@v3
+        - uses: actions/checkout@v4
         - run: semgrep scan --config auto --error --severity=ERROR --severity=WARNING
