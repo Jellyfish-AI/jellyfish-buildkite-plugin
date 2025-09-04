@@ -11,15 +11,15 @@ export BUILDKITE_REPO="jellyfish-ai/test-repo"
 export BUILDKITE_BUILD_URL="https://buildkite.com/test/builds/123"
 export BUILDKITE_COMMIT="abc123"
 export BUILDKITE_BUILD_NUMBER="123"
-export BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_WEBHOOK_URL="https://webhook.site/unique-id"
-export BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_API_TOKEN="test-token"
-export BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_LABELS="environment:test service:api region:us-east"
+export BUILDKITE_PLUGIN_JELLYFISH_WEBHOOK_URL="https://webhook.site/unique-id"
+export BUILDKITE_PLUGIN_JELLYFISH_API_TOKEN="test-token"
+export BUILDKITE_PLUGIN_JELLYFISH_LABELS="environment:test service:api region:us-east"
 
 echo "Note: Replace the webhook URL above with a real webhook.site URL to see the payload"
 echo "For now, testing with a fake URL to verify error handling..."
 
 # Test with invalid URL to verify error handling
-export BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_WEBHOOK_URL="https://fake-webhook-url-12345.invalid"
+export BUILDKITE_PLUGIN_JELLYFISH_WEBHOOK_URL="https://fake-webhook-url-12345.invalid"
 
 echo "Testing with invalid URL (should show proper error):"
 ../post-command.sh
@@ -39,7 +39,7 @@ export BUILDKITE_REPO="jellyfish-ai/test-repo"
 export BUILDKITE_BUILD_URL="https://buildkite.com/test/builds/123"
 export BUILDKITE_COMMIT="abc123"
 export BUILDKITE_BUILD_NUMBER="123"
-export BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_LABELS="environment:test service:api region:us-east"
+export BUILDKITE_PLUGIN_JELLYFISH_LABELS="environment:test service:api region:us-east"
 
 REFERENCE_ID="test-build-123"
 DEPLOYMENT_NAME="test-pipeline"

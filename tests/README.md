@@ -91,13 +91,13 @@ export BUILDKITE_BUILD_ID="test-build-123"
 export BUILDKITE_PIPELINE_SLUG="my-test-pipeline"
 export BUILDKITE_REPO="my-org/my-repo"
 export BUILDKITE_BUILD_URL="https://buildkite.com/my-org/my-pipeline/builds/123"
-export BUILDKITE_COMMIT="abc123def456"
+export BUILDKITE_COMMIT="abc123def456" # pragma: allowlist secret
 export BUILDKITE_BUILD_NUMBER="123"
 
 # Plugin configuration
-export BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_WEBHOOK_URL="https://your-test-endpoint.com/webhook"
-export BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_API_TOKEN="your-test-token"
-export BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_LABELS="environment:staging service:api"
+export BUILDKITE_PLUGIN_JELLYFISH_WEBHOOK_URL="https://your-test-endpoint.com/webhook"
+export BUILDKITE_PLUGIN_JELLYFISH_API_TOKEN="your-test-token"
+export BUILDKITE_PLUGIN_JELLYFISH_LABELS="environment:staging service:api"
 
 # Run the script
 ../post-command.sh
@@ -110,7 +110,7 @@ export BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_LABELS="environment:staging s
 3. Use it as the webhook URL in tests:
 
 ```bash
-export BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_WEBHOOK_URL="https://webhook.site/your-unique-id"
+export BUILDKITE_PLUGIN_JELLYFISH_WEBHOOK_URL="https://webhook.site/your-unique-id"
 ./test-local.sh
 ```
 
@@ -122,13 +122,13 @@ Test different HTTP scenarios:
 
 ```bash
 # Test successful POST
-export BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_WEBHOOK_URL="https://httpbin.org/post"
+export BUILDKITE_PLUGIN_JELLYFISH_WEBHOOK_URL="https://httpbin.org/post"
 
 # Test 404 error
-export BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_WEBHOOK_URL="https://httpbin.org/status/404"
+export BUILDKITE_PLUGIN_JELLYFISH_WEBHOOK_URL="https://httpbin.org/status/404"
 
 # Test 500 error  
-export BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_WEBHOOK_URL="https://httpbin.org/status/500"
+export BUILDKITE_PLUGIN_JELLYFISH_WEBHOOK_URL="https://httpbin.org/status/500"
 ```
 
 ## Testing in Real Buildkite Pipeline
@@ -147,7 +147,7 @@ steps:
       echo "This is a test deployment"
       echo "Deploy completed successfully"
     plugins:
-      - jellyfish-ai/jellyfish-buildkite-plugin:
+      - jellyfish:
           webhook-url: "https://webhook.site/your-unique-id"
           api-token: "${JELLYFISH_API_TOKEN}"
           name: "test-deployment"
@@ -166,7 +166,7 @@ steps:
   - label: ":white_check_mark: Successful Deploy"
     command: "echo 'Success!' && exit 0"
     plugins:
-      - jellyfish-ai/jellyfish-buildkite-plugin:
+      - jellyfish:
           webhook-url: "https://webhook.site/your-unique-id"
           api-token: "${JELLYFISH_API_TOKEN}"
           name: "successful-deployment"
@@ -175,7 +175,7 @@ steps:
   - label: ":x: Failed Deploy"
     command: "echo 'Failed!' && exit 1"
     plugins:
-      - jellyfish-ai/jellyfish-buildkite-plugin:
+      - jellyfish:
           webhook-url: "https://webhook.site/your-unique-id"
           api-token: "${JELLYFISH_API_TOKEN}"
           name: "failed-deployment"
@@ -212,7 +212,7 @@ Expected JSON payload:
   "name": "my-deployment",
   "deployed_at": "2025-08-07T12:34:56Z",
   "repo_name": "my-org/my-repo",
-  "commit_shas": ["abc123def456"],
+  "commit_shas": ["abc123def456"], // pragma: allowlist secret
   "labels": ["environment:production", "service:api"],
   "source_url": "https://buildkite.com/my-org/pipeline/builds/123"
 }
@@ -276,7 +276,7 @@ To add a new test scenario:
 log_test "Your test description"
 setup_base_env
 # Set up specific test conditions
-export BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_WEBHOOK_URL="test-url"
+export BUILDKITE_PLUGIN_JELLYFISH_WEBHOOK_URL="test-url"
 if run_post_command | grep -q "expected-output"; then
     log_pass "Test passed"
 else
@@ -311,7 +311,7 @@ fi
    ```
 
 4. **Environment Variables**: Double-check variable names match exactly
-   - Plugin variables must start with `BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_`
+   - Plugin variables must start with `BUILDKITE_PLUGIN_JELLYFISH_`
    - Use underscores, not hyphens in environment variable names
 
 5. **JSON Validation Errors**: Test JSON generation separately

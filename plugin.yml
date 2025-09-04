@@ -1,6 +1,7 @@
 # plugin.yml
-name: jellyfish-buildkite-plugin
+name: jellyfish
 description: Sends deployment status to Jellyfish DevOps API after a successful build.
+author: https://github.com/jellyfish-ai
 requirements:
   - curl # Ensures curl is available on the agent
   - jq # Ensures jq is available for JSON processing
@@ -9,11 +10,9 @@ configuration:
   properties:
     webhook-url:
       type: string
-      required: true
       description: The URL of your Jellyfish deployment webhook (e.g., https://webhooks.jellyfish.co/deployment).
     api-token:
       type: string
-      required: true
       description: The Jellyfish API token for authentication, used in the X-jellyfish-api-token header.
     reference-id:
       type: string
@@ -32,3 +31,6 @@ configuration:
     source-url:
       type: string
       description: The URL to the source of the deployment (e.g., a CI build URL). Defaults to the Buildkite build URL (BUILDKITE_BUILD_URL).
+  required:
+    - webhook-url
+    - api-token

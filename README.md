@@ -19,7 +19,7 @@ steps:
   - label: "Deploy to Production"
     command: "./deploy.sh"
     plugins:
-      - jellyfish-ai/jellyfish-buildkite-plugin#v1.0.0:
+      - jellyfish#v1.0.0:
           webhook-url: "https://webhooks.jellyfish.co/deployment"
           api-token: "${JELLYFISH_API_TOKEN}"
           name: "production-deployment"
@@ -59,7 +59,7 @@ The plugin sends a JSON payload with the following structure:
   "name": "my-service-deployment",
   "deployed_at": "2025-08-07T12:34:56Z",
   "repo_name": "org/my-repo",
-  "commit_shas": ["abc123def456"],
+  "commit_shas": ["abc123def456"], // pragma: allowlist secret
   "labels": ["environment:production", "service:api"],
   "source_url": "https://buildkite.com/org/pipeline/builds/123"
 }
@@ -93,7 +93,7 @@ The plugin requires the following tools to be available on your Buildkite agents
 ### Basic Usage
 ```yaml
 plugins:
-  - jellyfish-ai/jellyfish-buildkite-plugin#v1.0.0:
+  - jellyfish#v1.0.0:
       webhook-url: "https://webhooks.jellyfish.co/deployment"
       api-token: "${JELLYFISH_API_TOKEN}"
 ```
@@ -101,7 +101,7 @@ plugins:
 ### Advanced Usage with Custom Labels
 ```yaml
 plugins:
-  - jellyfish-ai/jellyfish-buildkite-plugin#v1.0.0:
+  - jellyfish#v1.0.0:
       webhook-url: "https://webhooks.jellyfish.co/deployment"
       api-token: "${JELLYFISH_API_TOKEN}"
       name: "api-service-production"
@@ -119,7 +119,7 @@ steps:
   - label: "Deploy to Staging"
     command: "./deploy.sh staging"
     plugins:
-      - jellyfish-ai/jellyfish-buildkite-plugin#v1.0.0:
+      - jellyfish#v1.0.0:
           webhook-url: "https://webhooks.jellyfish.co/deployment"
           api-token: "${JELLYFISH_API_TOKEN}"
           name: "staging-deployment"
@@ -130,7 +130,7 @@ steps:
   - label: "Deploy to Production"
     command: "./deploy.sh production"
     plugins:
-      - jellyfish-ai/jellyfish-buildkite-plugin#v1.0.0:
+      - jellyfish#v1.0.0:
           webhook-url: "https://webhooks.jellyfish.co/deployment"
           api-token: "${JELLYFISH_API_TOKEN}"
           name: "production-deployment"
