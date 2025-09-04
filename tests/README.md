@@ -91,7 +91,7 @@ export BUILDKITE_BUILD_ID="test-build-123"
 export BUILDKITE_PIPELINE_SLUG="my-test-pipeline"
 export BUILDKITE_REPO="my-org/my-repo"
 export BUILDKITE_BUILD_URL="https://buildkite.com/my-org/my-pipeline/builds/123"
-export BUILDKITE_COMMIT="abc123def456"
+export BUILDKITE_COMMIT="abc123def456" # pragma: allowlist secret
 export BUILDKITE_BUILD_NUMBER="123"
 
 # Plugin configuration

@@ -52,7 +52,7 @@ setup_base_env() {
     export BUILDKITE_PIPELINE_SLUG="test-pipeline"
     export BUILDKITE_REPO="jellyfish-ai/test-repo"
     export BUILDKITE_BUILD_URL="https://buildkite.com/jellyfish-ai/test-pipeline/builds/123"
-    export BUILDKITE_COMMIT="abc123def456789"
+    export BUILDKITE_COMMIT="abc123def456789" # pragma: allowlist secret
     export BUILDKITE_BUILD_NUMBER="123"
 }
 
