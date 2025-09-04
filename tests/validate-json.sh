@@ -15,7 +15,7 @@ REPO_NAME="jellyfish-ai/test-repo"
 SOURCE_URL="https://buildkite.com/test/builds/123"
 IS_SUCCESSFUL="true"
 DEPLOYED_AT=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-COMMIT_SHAS='["abc123"]'
+COMMIT_SHAS='["abc123"]' # pragma: allowlist secret
 LABELS_JSON_ARRAY=$(echo "environment:test service:api region:us-east" | jq -R -s 'split(" ") | map(select(length > 0))')
 
 JSON_PAYLOAD=$(jq -n \

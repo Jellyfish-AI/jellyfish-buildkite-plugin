@@ -212,7 +212,7 @@ Expected JSON payload:
   "name": "my-deployment",
   "deployed_at": "2025-08-07T12:34:56Z",
   "repo_name": "my-org/my-repo",
-  "commit_shas": ["abc123def456"],
+  "commit_shas": ["abc123def456"], // pragma: allowlist secret
   "labels": ["environment:production", "service:api"],
   "source_url": "https://buildkite.com/my-org/pipeline/builds/123"
 }
