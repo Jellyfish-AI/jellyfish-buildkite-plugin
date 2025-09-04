@@ -19,7 +19,7 @@ steps:
   - label: "Deploy to Production"
     command: "./deploy.sh"
     plugins:
-      - jellyfish-ai/jellyfish-buildkite-plugin#v1.0.0:
+      - jellyfish#v1.0.0:
           webhook-url: "https://webhooks.jellyfish.co/deployment"
           api-token: "${JELLYFISH_API_TOKEN}"
           name: "production-deployment"
@@ -93,7 +93,7 @@ The plugin requires the following tools to be available on your Buildkite agents
 ### Basic Usage
 ```yaml
 plugins:
-  - jellyfish-ai/jellyfish-buildkite-plugin#v1.0.0:
+  - jellyfish#v1.0.0:
       webhook-url: "https://webhooks.jellyfish.co/deployment"
       api-token: "${JELLYFISH_API_TOKEN}"
 ```
@@ -101,7 +101,7 @@ plugins:
 ### Advanced Usage with Custom Labels
 ```yaml
 plugins:
-  - jellyfish-ai/jellyfish-buildkite-plugin#v1.0.0:
+  - jellyfish#v1.0.0:
       webhook-url: "https://webhooks.jellyfish.co/deployment"
       api-token: "${JELLYFISH_API_TOKEN}"
       name: "api-service-production"
@@ -119,7 +119,7 @@ steps:
   - label: "Deploy to Staging"
     command: "./deploy.sh staging"
     plugins:
-      - jellyfish-ai/jellyfish-buildkite-plugin#v1.0.0:
+      - jellyfish#v1.0.0:
           webhook-url: "https://webhooks.jellyfish.co/deployment"
           api-token: "${JELLYFISH_API_TOKEN}"
           name: "staging-deployment"
@@ -130,7 +130,7 @@ steps:
   - label: "Deploy to Production"
     command: "./deploy.sh production"
     plugins:
-      - jellyfish-ai/jellyfish-buildkite-plugin#v1.0.0:
+      - jellyfish#v1.0.0:
           webhook-url: "https://webhooks.jellyfish.co/deployment"
           api-token: "${JELLYFISH_API_TOKEN}"
           name: "production-deployment"

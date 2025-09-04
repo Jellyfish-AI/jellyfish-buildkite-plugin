@@ -12,8 +12,8 @@ export BUILDKITE_REPO="jellyfish-ai/test-repo"
 export BUILDKITE_BUILD_URL="https://buildkite.com/test/builds/123"
 export BUILDKITE_COMMIT="abc123"
 export BUILDKITE_BUILD_NUMBER="123"
-export BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_WEBHOOK_URL="https://httpbin.org/post"
-export BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_API_TOKEN="test-token"
+export BUILDKITE_PLUGIN_JELLYFISH_WEBHOOK_URL="https://httpbin.org/post"
+export BUILDKITE_PLUGIN_JELLYFISH_API_TOKEN="test-token"
 
 echo "Testing basic functionality..."
 ../post-command.sh
@@ -21,7 +21,7 @@ echo "Exit code: $?"
 
 echo ""
 echo "Testing with labels..."
-export BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_LABELS="env:test service:api"
+export BUILDKITE_PLUGIN_JELLYFISH_LABELS="env:test service:api"
 ../post-command.sh
 echo "Exit code: $?"
 
@@ -34,6 +34,6 @@ echo "Exit code: $?"
 echo ""
 echo "Testing missing webhook URL (should fail)..."
 export BUILDKITE_COMMAND_EXIT_STATUS=0
-unset BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_WEBHOOK_URL
+unset BUILDKITE_PLUGIN_JELLYFISH_WEBHOOK_URL
 ../post-command.sh
 echo "Exit code: $?"
