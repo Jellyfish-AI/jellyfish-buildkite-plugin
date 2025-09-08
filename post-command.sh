@@ -90,7 +90,7 @@ echo "--- :information_source: Sending deployment data for: $DEPLOYMENT_NAME (co
 # -d: Send data in the request body
 HTTP_RESPONSE=$(curl -s -w "%{http_code}" -X POST "$WEBHOOK_URL" \
   -H 'Content-Type: application/json' \
-  -H "X-jf-api-token: $API_TOKEN" \
+  -H "X-JF-API-Token: $API_TOKEN" \
   -d "$JSON_PAYLOAD")
 
 # Extract HTTP status code (last 3 characters)
