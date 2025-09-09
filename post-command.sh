@@ -16,13 +16,26 @@ echo "--- :rocket: Sending deployment webhook to Jellyfish..."
 WEBHOOK_URL="${BUILDKITE_PLUGIN_JELLYFISH_WEBHOOK_URL:-}"
 API_TOKEN="${BUILDKITE_PLUGIN_JELLYFISH_API_TOKEN:-}"
 
-# Process labels: Buildkite passes array options as a space-separated string.
-# We convert this into a JSON array of "key:value" strings for Jellyfish.
+# Process labels: Buildkite passes array options as indexed environment variables.
+# We collect all BUILDKITE_PLUGIN_JELLYFISH_LABELS_* variables and convert to JSON array.
 LABELS_JSON_ARRAY="[]"
-if [ -n "${BUILDKITE_PLUGIN_JELLYFISH_LABELS:-}" ]; then
-  # Convert space-separated labels to array of strings in "key:value" format
-  # Use printf to avoid trailing newlines that could corrupt the JSON
-  LABELS_JSON_ARRAY=$(printf "%s" "$BUILDKITE_PLUGIN_JELLYFISH_LABELS" | jq -R 'split(" ") | map(select(length > 0))')
+LABELS_LIST=""
+
+# Collect all indexed label variables (LABELS_0, LABELS_1, etc.)
+for var in $(env | grep "^BUILDKITE_PLUGIN_JELLYFISH_LABELS_[0-9]" | sort -V); do
+  label_value=$(echo "$var" | cut -d'=' -f2-)
+  if [ -n "$label_value" ]; then
+    if [ -z "$LABELS_LIST" ]; then
+      LABELS_LIST="$label_value"
+    else
+      LABELS_LIST="$LABELS_LIST $label_value"
+    fi
+  fi
+done
+
+# Convert collected labels to JSON array
+if [ -n "$LABELS_LIST" ]; then
+  LABELS_JSON_ARRAY=$(printf "%s" "$LABELS_LIST" | jq -R 'split(" ") | map(select(length > 0))')
 fi
 
 # Validate required configuration
