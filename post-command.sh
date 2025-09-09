@@ -82,25 +82,39 @@ fi
 
 echo "--- :information_source: Sending deployment data for: $DEPLOYMENT_NAME (commit: $BUILDKITE_COMMIT)"
 
+# Debug output
+echo "--- :bug: Debug Information:"
+echo "Webhook URL: $WEBHOOK_URL"
+echo "API Token (first 10 chars): ${API_TOKEN:0:10}..."
+echo "API Token length: ${#API_TOKEN}"
+echo "JSON Payload:"
+echo "$JSON_PAYLOAD" | jq '.'
+
 # Send the curl request to the webhook URL.
 # -s: Silent mode (don't show progress or error messages)
 # -w: Write out HTTP response code
 # -X POST: Specify POST method
 # -H: Add custom headers
 # -d: Send data in the request body
+echo "--- :outbox_tray: Sending request..."
 HTTP_RESPONSE=$(curl -s -w "%{http_code}" -X POST "$WEBHOOK_URL" \
   -H 'Content-Type: application/json' \
-  -H "X-JF-API-Token: $API_TOKEN" \
+  -H "X-jf-api-token: $API_TOKEN" \
   -d "$JSON_PAYLOAD")
 
 # Extract HTTP status code (last 3 characters)
 HTTP_STATUS="${HTTP_RESPONSE: -3}"
+
+echo "--- :mag: Response received:"
+echo "HTTP Status: $HTTP_STATUS"
+echo "Full response: ${HTTP_RESPONSE%???}"  # Response without status code
 
 # Check the HTTP response
 if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 201 ] || [ "$HTTP_STATUS" -eq 202 ]; then
   echo "--- :white_check_mark: Deployment webhook sent successfully to Jellyfish! (HTTP $HTTP_STATUS)"
 else
   echo "--- :warning: Failed to send deployment webhook to Jellyfish. HTTP status: $HTTP_STATUS"
-  echo "Response: ${HTTP_RESPONSE%???}"  # Remove last 3 characters (status code)
+  echo "--- :exclamation: Debugging - Full curl command (token redacted):"
+  echo "curl -X POST '$WEBHOOK_URL' -H 'Content-Type: application/json' -H 'X-jf-api-token: [REDACTED]' -d '$JSON_PAYLOAD'"
   exit 1
 fi
