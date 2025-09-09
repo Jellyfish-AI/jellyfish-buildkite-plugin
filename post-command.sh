@@ -10,11 +10,17 @@ fi
 
 echo "--- :rocket: Sending deployment webhook to Jellyfish..."
 
+echo "--- :bug: Early Debug - Script started successfully"
+
 # Retrieve plugin configuration values.
 # Buildkite exposes plugin configuration as environment variables
 # prefixed with BUILDKITE_PLUGIN_{PLUGIN_SLUG}_{OPTION_NAME}.
 WEBHOOK_URL="${BUILDKITE_PLUGIN_JELLYFISH_WEBHOOK_URL:-}"
 API_TOKEN="${BUILDKITE_PLUGIN_JELLYFISH_API_TOKEN:-}"
+
+echo "--- :bug: Early Debug - Variables retrieved"
+echo "WEBHOOK_URL set: $([ -n "$WEBHOOK_URL" ] && echo 'YES' || echo 'NO')"
+echo "API_TOKEN set: $([ -n "$API_TOKEN" ] && echo 'YES' || echo 'NO')"
 
 # Process labels: Buildkite passes array options as a space-separated string.
 # We use 'jq' to convert this into a proper JSON array.
@@ -80,6 +86,7 @@ if [ $? -ne 0 ] || [ -z "$JSON_PAYLOAD" ]; then
   exit 1
 fi
 
+echo "--- :bug: JSON payload constructed successfully"
 echo "--- :information_source: Sending deployment data for: $DEPLOYMENT_NAME (commit: $BUILDKITE_COMMIT)"
 
 # Debug output
@@ -97,10 +104,14 @@ echo "$JSON_PAYLOAD" | jq '.'
 # -H: Add custom headers
 # -d: Send data in the request body
 echo "--- :outbox_tray: Sending request..."
+echo "--- :bug: About to execute curl command"
+
 HTTP_RESPONSE=$(curl -s -w "%{http_code}" -X POST "$WEBHOOK_URL" \
   -H 'Content-Type: application/json' \
   -H "X-jf-api-token: $API_TOKEN" \
   -d "$JSON_PAYLOAD")
+
+echo "--- :bug: Curl command completed"
 
 # Extract HTTP status code (last 3 characters)
 HTTP_STATUS="${HTTP_RESPONSE: -3}"
