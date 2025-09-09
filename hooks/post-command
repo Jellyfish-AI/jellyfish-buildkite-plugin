@@ -17,9 +17,10 @@ WEBHOOK_URL="${BUILDKITE_PLUGIN_JELLYFISH_WEBHOOK_URL:-}"
 API_TOKEN="${BUILDKITE_PLUGIN_JELLYFISH_API_TOKEN:-}"
 
 # Process labels: Buildkite passes array options as a space-separated string.
-# We use 'jq' to convert this into a proper JSON array.
+# We convert this into a JSON array of "key:value" strings for Jellyfish.
 LABELS_JSON_ARRAY="[]"
 if [ -n "${BUILDKITE_PLUGIN_JELLYFISH_LABELS:-}" ]; then
+  # Convert space-separated labels to array of strings in "key:value" format
   LABELS_JSON_ARRAY=$(echo "$BUILDKITE_PLUGIN_JELLYFISH_LABELS" | jq -R -s 'split(" ") | map(select(length > 0))')
 fi
 
