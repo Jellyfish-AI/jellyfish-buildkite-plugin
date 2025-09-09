@@ -39,8 +39,14 @@ fi
 # Use provided values or fall back to Buildkite environment variables.
 REFERENCE_ID="${BUILDKITE_PLUGIN_JELLYFISH_REFERENCE_ID:-$BUILDKITE_BUILD_ID}"
 DEPLOYMENT_NAME="${BUILDKITE_PLUGIN_JELLYFISH_NAME:-$BUILDKITE_PIPELINE_SLUG}"
-REPO_NAME="${BUILDKITE_PLUGIN_JELLYFISH_REPO_NAME:-$BUILDKITE_REPO}"
 SOURCE_URL="${BUILDKITE_PLUGIN_JELLYFISH_SOURCE_URL:-$BUILDKITE_BUILD_URL}"
+
+# Process repo_name: Extract org/repo format from repository URL
+REPO_NAME="${BUILDKITE_PLUGIN_JELLYFISH_REPO_NAME:-}"
+if [ -z "$REPO_NAME" ]; then
+  # Extract org/repo from BUILDKITE_REPO URL (e.g., https://github.com/org/repo -> org/repo)
+  REPO_NAME=$(echo "$BUILDKITE_REPO" | sed -E 's|.*[:/]([^/]+/[^/]+)/?$|\1|' | sed 's/\.git$//')
+fi
 
 # Dynamically generated data for the payload.
 IS_SUCCESSFUL="true" # This hook only runs on success

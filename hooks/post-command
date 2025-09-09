@@ -39,8 +39,14 @@ fi
 # Use provided values or fall back to Buildkite environment variables.
 REFERENCE_ID="${BUILDKITE_PLUGIN_JELLYFISH_REFERENCE_ID:-$BUILDKITE_BUILD_ID}"
 DEPLOYMENT_NAME="${BUILDKITE_PLUGIN_JELLYFISH_NAME:-$BUILDKITE_PIPELINE_SLUG}"
-REPO_NAME="${BUILDKITE_PLUGIN_JELLYFISH_REPO_NAME:-$BUILDKITE_REPO}"
 SOURCE_URL="${BUILDKITE_PLUGIN_JELLYFISH_SOURCE_URL:-$BUILDKITE_BUILD_URL}"
+
+# Process repo_name: Extract org/repo format from repository URL
+REPO_NAME="${BUILDKITE_PLUGIN_JELLYFISH_REPO_NAME:-}"
+if [ -z "$REPO_NAME" ]; then
+  # Extract org/repo from BUILDKITE_REPO URL (e.g., https://github.com/org/repo -> org/repo)
+  REPO_NAME=$(echo "$BUILDKITE_REPO" | sed -E 's|.*[:/]([^/]+/[^/]+)/?$|\1|' | sed 's/\.git$//')
+fi
 
 # Dynamically generated data for the payload.
 IS_SUCCESSFUL="true" # This hook only runs on success
@@ -78,6 +84,9 @@ if [ $? -ne 0 ] || [ -z "$JSON_PAYLOAD" ]; then
 fi
 
 echo "--- :information_source: Sending deployment data for: $DEPLOYMENT_NAME (commit: $BUILDKITE_COMMIT)"
+echo "--- :mag: Debug - Labels array: $LABELS_JSON_ARRAY"
+echo "--- :mag: Debug - JSON payload (-d parameter):"
+echo "$JSON_PAYLOAD" | jq .
 
 # Send the curl request to the webhook URL.
 # -s: Silent mode (don't show progress or error messages)
