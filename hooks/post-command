@@ -10,17 +10,11 @@ fi
 
 echo "--- :rocket: Sending deployment webhook to Jellyfish..."
 
-echo "--- :bug: Early Debug - Script started successfully"
-
 # Retrieve plugin configuration values.
 # Buildkite exposes plugin configuration as environment variables
 # prefixed with BUILDKITE_PLUGIN_{PLUGIN_SLUG}_{OPTION_NAME}.
 WEBHOOK_URL="${BUILDKITE_PLUGIN_JELLYFISH_WEBHOOK_URL:-}"
 API_TOKEN="${BUILDKITE_PLUGIN_JELLYFISH_API_TOKEN:-}"
-
-echo "--- :bug: Early Debug - Variables retrieved"
-echo "WEBHOOK_URL set: $([ -n "$WEBHOOK_URL" ] && echo 'YES' || echo 'NO')"
-echo "API_TOKEN set: $([ -n "$API_TOKEN" ] && echo 'YES' || echo 'NO')"
 
 # Process labels: Buildkite passes array options as a space-separated string.
 # We use 'jq' to convert this into a proper JSON array.
@@ -86,16 +80,7 @@ if [ $? -ne 0 ] || [ -z "$JSON_PAYLOAD" ]; then
   exit 1
 fi
 
-echo "--- :bug: JSON payload constructed successfully"
 echo "--- :information_source: Sending deployment data for: $DEPLOYMENT_NAME (commit: $BUILDKITE_COMMIT)"
-
-# Debug output
-echo "--- :bug: Debug Information:"
-echo "Webhook URL: $WEBHOOK_URL"
-echo "API Token (first 10 chars): ${API_TOKEN:0:10}..."
-echo "API Token length: ${#API_TOKEN}"
-echo "JSON Payload:"
-echo "$JSON_PAYLOAD" | jq '.'
 
 # Send the curl request to the webhook URL.
 # -s: Silent mode (don't show progress or error messages)
@@ -103,29 +88,19 @@ echo "$JSON_PAYLOAD" | jq '.'
 # -X POST: Specify POST method
 # -H: Add custom headers
 # -d: Send data in the request body
-echo "--- :outbox_tray: Sending request..."
-echo "--- :bug: About to execute curl command"
-
 HTTP_RESPONSE=$(curl -s -w "%{http_code}" -X POST "$WEBHOOK_URL" \
   -H 'Content-Type: application/json' \
   -H "X-jf-api-token: $API_TOKEN" \
   -d "$JSON_PAYLOAD")
 
-echo "--- :bug: Curl command completed"
-
 # Extract HTTP status code (last 3 characters)
 HTTP_STATUS="${HTTP_RESPONSE: -3}"
 
-echo "--- :mag: Response received:"
-echo "HTTP Status: $HTTP_STATUS"
-echo "Full response: ${HTTP_RESPONSE%???}"  # Response without status code
-
 # Check the HTTP response
-if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 201 ] || [ "$HTTP_STATUS" -eq 202 ]; then
+if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 201 ] || [ "$HTTP_STATUS" -eq 202 ] || [ "$HTTP_STATUS" -eq 204 ]; then
   echo "--- :white_check_mark: Deployment webhook sent successfully to Jellyfish! (HTTP $HTTP_STATUS)"
 else
   echo "--- :warning: Failed to send deployment webhook to Jellyfish. HTTP status: $HTTP_STATUS"
-  echo "--- :exclamation: Debugging - Full curl command (token redacted):"
-  echo "curl -X POST '$WEBHOOK_URL' -H 'Content-Type: application/json' -H 'X-jf-api-token: [REDACTED]' -d '$JSON_PAYLOAD'"
+  echo "Response: ${HTTP_RESPONSE%???}"  # Remove last 3 characters (status code)
   exit 1
 fi
