@@ -84,6 +84,9 @@ if [ $? -ne 0 ] || [ -z "$JSON_PAYLOAD" ]; then
 fi
 
 echo "--- :information_source: Sending deployment data for: $DEPLOYMENT_NAME (commit: $BUILDKITE_COMMIT)"
+echo "--- :mag: Debug - Raw labels env var: '${BUILDKITE_PLUGIN_JELLYFISH_LABELS:-}'"
+echo "--- :mag: Debug - All jellyfish env vars:"
+env | grep "BUILDKITE_PLUGIN_JELLYFISH" | sort
 echo "--- :mag: Debug - Labels array: $LABELS_JSON_ARRAY"
 echo "--- :mag: Debug - JSON payload (-d parameter):"
 echo "$JSON_PAYLOAD" | jq .
