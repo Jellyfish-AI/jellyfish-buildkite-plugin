@@ -21,7 +21,8 @@ API_TOKEN="${BUILDKITE_PLUGIN_JELLYFISH_API_TOKEN:-}"
 LABELS_JSON_ARRAY="[]"
 if [ -n "${BUILDKITE_PLUGIN_JELLYFISH_LABELS:-}" ]; then
   # Convert space-separated labels to array of strings in "key:value" format
-  LABELS_JSON_ARRAY=$(echo "$BUILDKITE_PLUGIN_JELLYFISH_LABELS" | jq -R -s 'split(" ") | map(select(length > 0))')
+  # Use printf to avoid trailing newlines that could corrupt the JSON
+  LABELS_JSON_ARRAY=$(printf "%s" "$BUILDKITE_PLUGIN_JELLYFISH_LABELS" | jq -R 'split(" ") | map(select(length > 0))')
 fi
 
 # Validate required configuration
