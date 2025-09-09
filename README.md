@@ -15,11 +15,15 @@ A Buildkite plugin that automatically sends deployment events to Jellyfish's Dev
 Add the plugin to your Buildkite pipeline's `pipeline.yml`:
 
 ```yaml
+env:
+  # Store your Jellyfish API token as a secure environment variable
+  JELLYFISH_API_TOKEN: "your-jellyfish-api-token-here"
+
 steps:
   - label: "Deploy to Production"
     command: "./deploy.sh"
     plugins:
-      - jellyfish#v1.0.0:
+      - Jellyfish-AI/jellyfish#v1.0.7:
           webhook-url: "https://webhooks.jellyfish.co/deployment"
           api-token: "${JELLYFISH_API_TOKEN}"
           name: "production-deployment"
@@ -93,7 +97,7 @@ The plugin requires the following tools to be available on your Buildkite agents
 ### Basic Usage
 ```yaml
 plugins:
-  - jellyfish#v1.0.0:
+  - Jellyfish-AI/jellyfish#v1.0.7:
       webhook-url: "https://webhooks.jellyfish.co/deployment"
       api-token: "${JELLYFISH_API_TOKEN}"
 ```
@@ -101,7 +105,7 @@ plugins:
 ### Advanced Usage with Custom Labels
 ```yaml
 plugins:
-  - jellyfish#v1.0.0:
+  - Jellyfish-AI/jellyfish#v1.0.7:
       webhook-url: "https://webhooks.jellyfish.co/deployment"
       api-token: "${JELLYFISH_API_TOKEN}"
       name: "api-service-production"
@@ -119,7 +123,7 @@ steps:
   - label: "Deploy to Staging"
     command: "./deploy.sh staging"
     plugins:
-      - jellyfish#v1.0.0:
+      - Jellyfish-AI/jellyfish#v1.0.7:
           webhook-url: "https://webhooks.jellyfish.co/deployment"
           api-token: "${JELLYFISH_API_TOKEN}"
           name: "staging-deployment"
@@ -130,7 +134,7 @@ steps:
   - label: "Deploy to Production"
     command: "./deploy.sh production"
     plugins:
-      - jellyfish#v1.0.0:
+      - Jellyfish-AI/jellyfish#v1.0.7:
           webhook-url: "https://webhooks.jellyfish.co/deployment"
           api-token: "${JELLYFISH_API_TOKEN}"
           name: "production-deployment"

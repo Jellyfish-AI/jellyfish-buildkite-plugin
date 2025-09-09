@@ -45,12 +45,7 @@ IS_SUCCESSFUL="true" # This hook only runs on success
 DEPLOYED_AT=$(date -u +"%Y-%m-%dT%H:%M:%SZ") # Current UTC time in ISO 8601 format
 COMMIT_SHAS="[\"$BUILDKITE_COMMIT\"]" # Using the head commit of the build
 
-# Process labels: Buildkite passes array options as a space-separated string.
-# We use 'jq' to convert this into a proper JSON array.
-LABELS_JSON_ARRAY="[]"
-if [ -n "${BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_LABELS:-}" ]; then
-  LABELS_JSON_ARRAY=$(echo "$BUILDKITE_PLUGIN_JELLYFISH_BUILDKITE_PLUGIN_LABELS" | jq -R -s 'split(" ") | map(select(length > 0))')
-fi
+
 
 # Construct the JSON payload.
 # We use printf and jq to safely escape and format the JSON string.
