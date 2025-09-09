@@ -26,7 +26,7 @@ steps:
       # Your deployment commands here
       ./deploy.sh staging
     plugins:
-      - Jellyfish-AI/jellyfish#develop:
+      - Jellyfish-AI/jellyfish#v1.0.7:
           webhook-url: "https://webhooks.jellyfish.co/deployment"
           api-token: "${JELLYFISH_API_TOKEN}"
           name: "staging-deployment"
@@ -43,7 +43,7 @@ steps:
       # Your production deployment commands here
       ./deploy.sh production
     plugins:
-      - Jellyfish-AI/jellyfish#develop:
+      - Jellyfish-AI/jellyfish#v1.0.7:
           webhook-url: "https://webhooks.jellyfish.co/deployment"
           api-token: "${JELLYFISH_API_TOKEN}"
           name: "production-deployment"
